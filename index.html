@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ItsAI Landing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8F8F8;
+      --text: #4d4d4d;
+      --muted: #bcbcbc;
+      --topbar: #111517;
+      --green: #75eb26;
+      --green-dark: #52c516;
+      --green-soft: #D9FFC2;
+      --white: #ffffff;
+      --radius: 18px;
+      --shadow: 0 10px 24px rgba(0,0,0,.06);
+      --arrow-float: 2.2s ease-in-out infinite;
+      --button-pulse: 1.9s ease-in-out infinite;
+      --container: 760px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    img, svg { display: block; max-width: 100%; }
+    button { font: inherit; }
+
+    .page {
+      width: 100%;
+      max-width: var(--container);
+      margin: 0 auto;
+      background: var(--bg);
+    }
+
+    .topbar {
+      background: var(--topbar);
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .menu-btn {
+      position: absolute;
+      left: 12px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .menu-panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 12px;
+      width: min(280px, calc(100vw - 24px));
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 18px 34px rgba(0,0,0,.14);
+      padding: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity .22s ease, transform .22s ease;
+      z-index: 30;
+    }
+
+    .menu-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .menu-link {
+      display: block;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: #4d4d4d;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .menu-link:hover {
+      background: #f3f3f3;
+    }
+
+    .menu-lines,
+    .menu-lines::before,
+    .menu-lines::after {
+      content: "";
+      display: block;
+      width: 28px;
+      height: 4px;
+      border-radius: 999px;
+      background: #ffffff;
+    }
+
+    .menu-lines::before { transform: translateY(-8px); }
+    .menu-lines::after { transform: translateY(4px); }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand img {
+      width: auto;
+      height: clamp(18px, 4vw, 26px);
+      object-fit: contain;
+    }
+
+    .hero {
+      padding: 18px 16px 28px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      margin: 18px 0 20px;
+      font-size: clamp(1.9rem, 5vw, 2.4rem);
+      line-height: 1.05;
+      font-weight: 800;
+      color: #3c3c3c;
+    }
+
+    .download-ring {
+      width: min(62vw, 245px);
+      aspect-ratio: 1;
+      border: 10px solid var(--green);
+      border-radius: 50%;
+      margin: 0 auto 22px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+    }
+
+    .download-icon {
+      animation: floatArrow var(--arrow-float);
+      filter: drop-shadow(0 10px 10px rgba(117, 235, 38, .18));
+      transform-origin: center;
+    }
+
+    @keyframes floatArrow {
+      0%, 100% { transform: translateY(-4px); }
+      50% { transform: translateY(10px); }
+    }
+
+    .steps {
+      width: fit-content;
+      margin: 0 auto 26px;
+      display: grid;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #4d4d4d;
+    }
+
+    .num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #5a5a5a;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 0.9rem;
+      flex: 0 0 auto;
+    }
+
+    .cta {
+      width: 100%;
+      border: 0;
+      border-radius: 20px;
+      background: var(--green);
+      color: #4d4d4d;
+      font-weight: 800;
+      font-size: clamp(1.3rem, 4vw, 1.6rem);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+      animation: pulseButton var(--button-pulse);
+      text-transform: uppercase;
+    }
+
+    .cta-main {
+      margin-top: 10px;
+    }
+
+    @keyframes pulseButton {
+      0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 10px 24px rgba(0,0,0,.06); }
+      50% { transform: translateY(-3px) scale(1.02); box-shadow: 0 16px 30px rgba(117, 235, 38, .28); }
+    }
+
+    .cta:hover { background: var(--green-dark); }
+    .cta:active { transform: scale(.985); animation: none; }
+
+    .smallprint {
+      margin: 14px auto 0;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      color: #DDDBDB;
+      max-width: 680px;
+    }
+
+    .description {
+      margin: 16px auto 0;
+      max-width: 680px;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      color: #DDDBDB;
+      text-align: center;
+    }
+
+    .faq,
+    .reasons {
+      padding: 18px 16px 10px;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .faq-item {
+      background: #D9FFC2;
+      border-radius: 10px;
+      overflow: hidden;
+      border: none;
+      box-shadow: none;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 18px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      text-align: left;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #4a4a4a;
+      min-height: 62px;
+      background: transparent;
+      border: none;
+    }
+
+    .faq-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #5a5a5a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      line-height: 1;
+      flex: 0 0 auto;
+      transition: transform .2s ease, background .2s ease;
+      padding-bottom: 1px;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 18px;
+      color: #5e5e5e;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      transition: max-height .28s ease, padding .28s ease;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 180px;
+      padding: 0 18px 18px;
+    }
+
+    .faq-item.open .faq-icon {
+      transform: rotate(180deg);
+      background: #4b4b4b;
+    }
+
+    .section-title {
+      margin: 26px 0 18px;
+      text-align: center;
+      color: #111517;
+      font-weight: 800;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding-bottom: 70px;
+    }
+
+    .card {
+      background: var(--green-soft);
+      border-radius: 8px;
+      padding: 18px 16px 20px;
+      min-height: 136px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.2;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      margin: 12px 0 0;
+      font-size: 0.86rem;
+      line-height: 1.25;
+    }
+
+    .icon-img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    /* Bloque teléfono */
+    .phone-box {
+      margin: 26px auto 0;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .phone-title {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      color: #5e5e5e;
+    }
+
+    .phone-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 10px;
+      border: 2px solid #d6d6d6;
+      background: #ffffff;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      transition: border-color .18s ease;
+    }
+
+    .phone-input-wrap.valid {
+      border-color: #8ee63b;
+    }
+
+    .phone-icon-svg {
+      width: 20px;
+      height: 20px;
+      flex: 0 0 auto;
+      color: #4d4d4d;
+    }
+
+    .phone-prefix {
+      font-weight: 700;
+      color: #4d4d4d;
+      flex: 0 0 auto;
+    }
+
+    .phone-input {
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      flex: 1 1 auto;
+      padding: 4px 0;
+      letter-spacing: 0.08em;
+      color: #4d4d4d;
+      background: transparent;
+    }
+
+    .phone-input::placeholder {
+      color: #bfbfbf;
+    }
+
+    .phone-cta {
+      margin-top: 6px;
+      background: #d4d4d4;
+      color: #777777;
+      box-shadow: none;
+      cursor: not-allowed;
+      animation: none;
+    }
+
+    .phone-cta.enabled {
+      background: var(--green);
+      color: #4d4d4d;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .phone-cta.enabled:hover {
+      background: var(--green-dark);
+    }
+
+    /* Bloque PIN */
+    .pin-box {
+      margin: 22px auto 0;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .pin-title {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      color: #5e5e5e;
+    }
+
+    .pin-input-wrap {
+      border-radius: 10px;
+      border: 2px solid #d6d6d6;
+      background: #ffffff;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      transition: border-color .18s ease;
+    }
+
+    .pin-input-wrap.valid {
+      border-color: #8ee63b;
+    }
+
+    .pin-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 1.4rem;
+      letter-spacing: 0.5em;
+      text-align: center;
+      color: #4d4d4d;
+      background: transparent;
+    }
+
+    .pin-input::placeholder {
+      color: #bfbfbf;
+    }
+
+    .pin-cta {
+      margin-top: 6px;
+      background: #d4d4d4;
+      color: #777777;
+      box-shadow: none;
+      cursor: not-allowed;
+      animation: none;
+    }
+
+    .pin-cta.enabled {
+      background: var(--green);
+      color: #4d4d4d;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+
+    .pin-cta.enabled:hover {
+      background: var(--green-dark);
+    }
+
+    /* Botón fijo inferior */
+    .fixed-cta-wrapper {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .fixed-cta-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 8px 16px 12px;
+      display: flex;
+      justify-content: center;
+      pointer-events: auto;
+    }
+
+    .fixed-cta-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 999px;
+      background: var(--green);
+      color: #4d4d4d;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 12px 18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .fixed-cta-btn:hover {
+      background: var(--green-dark);
+    }
+
+    .footer {
+      padding: 14px 16px 26px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #8a8a8a;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #4d4d4d;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 520px) {
+      .topbar { min-height: 54px; }
+      .download-ring { border-width: 8px; width: min(54vw, 180px); }
+      .cta { border-radius: 16px; }
+      .cards { gap: 12px; }
+      .card { min-height: 120px; }
+
+      .fixed-cta-inner {
+        padding-inline: 12px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .hero,
+      .faq,
+      .reasons,
+      .footer { padding-left: 24px; padding-right: 24px; }
+      .faq-list { gap: 14px; }
+      .faq-item { border-radius: 12px; }
+      .cards { gap: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <button class="menu-btn" aria-label="Otwórz menu" aria-expanded="false" aria-controls="site-menu">
+        <span class="menu-lines"></span>
+      </button>
+
+      <nav id="site-menu" class="menu-panel" aria-label="Menu główne">
+        <a class="menu-link" href="https://io.acclog.in/al/VQez5" target="_blank" rel="noopener noreferrer">ItsAI</a>
+        <a class="menu-link" href="https://itsai-online.com/terms-and-conditions" target="_blank" rel="noopener noreferrer">Zasady i Warunki</a>
+        <a class="menu-link" href="https://itsai-online.com/terms-and-conditions" target="_blank" rel="noopener noreferrer">Kontakt</a>
+      </nav>
+
+      <div class="brand" aria-label="ItsAI logo">
+        <img src="./assets/itsailogo.png" alt="ItsAI" />
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Pobierz teraz</h1>
+
+        <div class="download-ring" aria-hidden="true">
+          <svg class="download-icon" viewBox="0 0 180 180" width="136" height="136" role="img" aria-label="Download icon">
+            <path d="M56 18h68v58h36L90 152 20 76h36V18Z" fill="#75eb26"></path>
+          </svg>
+        </div>
+
+        <div class="steps" aria-label="Kroki">
+          <div class="step"><span class="num">1</span><span>Kliknij Dalej</span></div>
+          <div class="step"><span class="num">2</span><span>Wpisz swój PIN</span></div>
+          <div class="step"><span class="num">3</span><span>Pobierz</span></div>
+        </div>
+
+        <!-- Paso 1: botón principal -->
+        <button class="cta cta-main" id="heroCta">DALEJ</button>
+
+        <!-- Paso 2: Teléfono -->
+        <div class="phone-box" id="phoneBox" hidden>
+          <p class="phone-title">
+            Wprowadź numer swojego telefonu komórkowego, aby otrzymać kod PIN
+          </p>
+
+          <div class="phone-input-wrap" id="phoneWrap">
+            <svg class="phone-icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="7" y="3" width="10" height="18" rx="2" ry="2" fill="none" stroke="#4d4d4d" stroke-width="1.6"></rect>
+              <circle cx="12" cy="17" r="1.2" fill="#4d4d4d"></circle>
+            </svg>
+            <span class="phone-prefix">+48</span>
+            <input
+              id="msisdn"
+              class="phone-input"
+              type="tel"
+              inputmode="numeric"
+              autocomplete="tel"
+              placeholder="__________"
+              aria-label="Numer telefonu komórkowego"
+            />
+          </div>
+
+          <button class="cta phone-cta" id="phoneCta" disabled>DALEJ</button>
+        </div>
+
+        <!-- Paso 3: PIN -->
+        <div class="pin-box" id="pinBox" hidden>
+          <p class="pin-title">
+            Proszę wpisać PIN, który Ci wysłaliśmy
+          </p>
+
+          <div class="pin-input-wrap" id="pinWrap">
+            <input
+              id="pinInput"
+              class="pin-input"
+              type="tel"
+              inputmode="numeric"
+              maxlength="4"
+              placeholder="••••"
+              aria-label="Kod PIN"
+            />
+          </div>
+
+          <button class="cta pin-cta" id="pinCta" disabled>DALEJ</button>
+        </div>
+
+        <p class="smallprint">
+          Uzyskaj dostęp do ItsAI za 15,01 zł z VAT/co tydzień, 1 dzień gratis.
+        </p>
+
+        <p class="description">
+          Kreator treści oparty na sztucznej inteligencji. Generuj pliki AI z obrazami i tekstem w ciągu sekund.
+          Kompatybilny z Androidem i iOS. Możesz anulować subskrypcję w dowolnym momencie ze swojego konta.
+          Koszt zostanie doliczony do rachunku za telefon komórkowy. Kliknij dalej, aby uzyskać więcej informacji
+          i zaakceptować nasz T&C. Kontakt w przypadku reklamacji: support@itsai.com
+        </p>
+      </section>
+
+      <section class="faq">
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Czym jest ItsAI?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">ItsAI to kreator treści oparty na sztucznej inteligencji, który pomaga tworzyć dokumenty i obrazy w kilka sekund.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Ile kosztuje ItsAI?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Dostęp do ItsAI kosztuje 15,01 zł z VAT co tydzień po zakończeniu okresu promocyjnego.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Czy ItsAI działa na urządzeniach mobilnych?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Tak, ItsAI jest kompatybilny z większością nowoczesnych urządzeń mobilnych z przeglądarką internetową.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" type="button" aria-expanded="false">
+              <span>Jak anulować subskrypcję?</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">Subskrypcję możesz anulować w dowolnym momencie, postępując zgodnie z instrukcjami operatora w przesłanych komunikatach.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="reasons">
+        <h2 class="section-title">Więcej powodów, aby dołączyć</h2>
+
+        <div class="cards">
+          <article class="card">
+            <div class="card-head">
+              <h3>TWÓRZ DOKUMENTY AI</h3>
+              <img class="icon-img" src="./assets/note-2.png" alt="">
+            </div>
+            <p>Twórz dokumenty AI w kilka sekund.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>EDYTOR ONLINE</h3>
+              <img class="icon-img" src="./assets/Edit_Icon_UIA.png" alt="">
+            </div>
+            <p>Edytuj i korzystaj z naszych szablonów.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>WSZYSTKIE JĘZYKI</h3>
+              <img class="icon-img" src="./assets/Chat_Icon_UIA.png" alt="">
+            </div>
+            <p>Łatwe w użyciu, obsługuje wiele języków.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <h3>UDOSTĘPNIJ I POBIERZ</h3>
+              <img class="icon-img" src="./assets/gallery-favorite.png" alt="">
+            </div>
+            <p>Zachowaj i pobierz swoje utworzone pliki.</p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-links">
+          <a href="https://itsai-online.com/terms-and-conditions" target="_blank" rel="noopener noreferrer">Kontakt</a>
+          <a href="https://itsai-online.com/terms-and-conditions" target="_blank" rel="noopener noreferrer">FAQ</a>
+          <a href="https://itsai-online.com/terms-and-conditions" target="_blank" rel="noopener noreferrer">Zasady i Warunki</a>
+        </div>
+        <div>©Next Move Digital Wszelkie prawa zastrzeżone</div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Botón fijo inferior con el mismo texto -->
+  <div class="fixed-cta-wrapper">
+    <div class="fixed-cta-inner">
+      <button class="fixed-cta-btn" id="fixedCta">DALEJ</button>
+    </div>
+  </div>
+
+  <script>
+    const menuButton = document.querySelector('.menu-btn');
+    const menuPanel = document.querySelector('.menu-panel');
+
+    const heroCta = document.getElementById('heroCta');
+    const fixedCta = document.getElementById('fixedCta');
+    const phoneBox = document.getElementById('phoneBox');
+    const msisdnInput = document.getElementById('msisdn');
+    const phoneCta = document.getElementById('phoneCta');
+    const phoneWrap = document.getElementById('phoneWrap');
+
+    const pinBox = document.getElementById('pinBox');
+    const pinInput = document.getElementById('pinInput');
+    const pinCta = document.getElementById('pinCta');
+    const pinWrap = document.getElementById('pinWrap');
+
+    const itsaiUrl = 'https://io.acclog.in/al/VQez5';
+
+    // Menú
+    menuButton.addEventListener('click', () => {
+      const isOpen = menuPanel.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!menuPanel.contains(event.target) && !menuButton.contains(event.target)) {
+        menuPanel.classList.remove('open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Función común para empezar flujo (mostrar teléfono)
+    function startFlow() {
+      heroCta.style.display = 'none';
+      fixedCta.style.display = 'none';
+      phoneBox.hidden = false;
+      msisdnInput.focus();
+    }
+
+    heroCta.addEventListener('click', startFlow);
+    fixedCta.addEventListener('click', startFlow);
+
+    // Validación teléfono
+    msisdnInput.addEventListener('input', () => {
+      const digits = msisdnInput.value.replace(/\D/g, '');
+      msisdnInput.value = digits;
+
+      const isValid = digits.length >= 9;
+
+      phoneCta.disabled = !isValid;
+      phoneCta.classList.toggle('enabled', isValid);
+      phoneWrap.classList.toggle('valid', isValid);
+    });
+
+    // Paso 2: mostrar PIN
+    phoneCta.addEventListener('click', () => {
+      if (phoneCta.disabled) return;
+
+      phoneBox.hidden = true;
+      pinBox.hidden = false;
+      pinInput.focus();
+    });
+
+    // Validación PIN: 4 dígitos
+    pinInput.addEventListener('input', () => {
+      const digits = pinInput.value.replace(/\D/g, '');
+      pinInput.value = digits;
+
+      const isValid = digits.length === 4;
+
+      pinCta.disabled = !isValid;
+      pinCta.classList.toggle('enabled', isValid);
+      pinWrap.classList.toggle('valid', isValid);
+    });
+
+    // Paso 3: redirección final
+    pinCta.addEventListener('click', () => {
+      if (pinCta.disabled) return;
+      window.location.href = itsaiUrl;
+    });
+
+    // FAQ acordeón
+    document.querySelectorAll('.faq-question').forEach((button) => {
+      button.addEventListener('click', () => {
+        const item = button.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+
+        document.querySelectorAll('.faq-item').forEach((faq) => {
+          faq.classList.remove('open');
+          faq.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          faq.querySelector('.faq-icon').textContent = '+';
+        });
+
+        if (!isOpen) {
+          item.classList.add('open');
+          button.setAttribute('aria-expanded', 'true');
+          button.querySelector('.faq-icon').textContent = '−';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
